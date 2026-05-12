@@ -217,39 +217,31 @@ show_random_dataset_image_with_prediction(val_data, unet, device)
 
 
 # %% tags=["task"]
-# Sorensen Dice Coefficient implemented in torch
-# the coefficient takes values in two discrete arrays
-# with values in {0, 1}, and produces a score in [0, 1]
+# Sorensen-Dice coefficient implemented in torch.
+# Takes prediction and target tensors of the same shape with values in {0, 1} and returns a single score in [0, 1],
 # where 0 is the worst score, 1 is the best score
 class DiceCoefficient(nn.Module):
     def __init__(self, eps=1e-6):
         super().__init__()
         self.eps = eps
 
-    # the dice coefficient of two sets represented as vectors a, b can be
-    # computed as (2 *|a b| / (a^2 + b^2))
+    # 2 * sum(prediction * target) / (sum(prediction**2) + sum(target**2))
     def forward(self, prediction, target):
-        intersection = ... # TODO: your code here
-        union = ... # TODO: your code here
-        return 2 * intersection / union.clamp(min=self.eps)
+        numerator = ... # TODO
+        denominator = ... # TODO
+        return numerator / denominator.clamp(min=self.eps)
 
 
 # %% tags=["solution"]
-# sorensen dice coefficient implemented in torch
-# the coefficient takes values in two discrete arrays
-# with values in {0, 1}, and produces a score in [0, 1]
-# where 0 is the worst score, 1 is the best score
 class DiceCoefficient(nn.Module):
     def __init__(self, eps=1e-6):
         super().__init__()
         self.eps = eps
 
-    # the dice coefficient of two sets represented as vectors a, b ca be
-    # computed as (2 *|a b| / (a^2 + b^2))
     def forward(self, prediction, target):
-        intersection = (prediction * target).sum()
-        union = (prediction * prediction).sum() + (target * target).sum()
-        return 2 * intersection / union.clamp(min=self.eps)
+        numerator = 2 * (prediction * target).sum()
+        denominator = (prediction ** 2).sum() + (target ** 2).sum()
+        return numerator / denominator.clamp(min=self.eps)
 
 
 # %% [markdown]
@@ -786,7 +778,7 @@ for epoch in range(n_epochs):
 # %% [markdown]
 #
 # <div class="alert alert-block alert-info">
-#     <b>Task BONUS.1</b>: Modify the ConvBlockGN class in bonus_unet.py to include GroupNorm layers. Then update the UNetGN class to use the modified ConvBlock
+#     <b>Task BONUS.1</b>: Modify the <code>ConvBlockGN</code> class in <code>bonus_unet.py</code> to include GroupNorm layers (use <code>num_groups=2</code>). Then in <code>UNetGN</code>, replace the two <code>ConvBlock</code> calls with <code>ConvBlockGN</code>.
 # </div>
 
 
@@ -2331,8 +2323,7 @@ print(f"Mean Accuracy is {np.mean(accuracy_list):.3f}")
 #
 
 # %%
-# Install cellpose.
-# !pip install cellpose
+# cellpose was installed by setup.sh (v3 pinned in requirements.txt).
 
 # %%
 from cellpose import models
@@ -2340,6 +2331,27 @@ from cellpose import models
 model = models.CellposeModel(pretrained_model="cyto3", device=device)
 channels = [[0, 0]]
 
+# %% [markdown]
+# Let's first look at one cellpose prediction next to the ground truth.
+
+# %%
+idx = np.random.randint(len(val_loader.dataset))
+image, mask, _ = val_loader.dataset[idx]
+image = image.cpu().numpy()
+gt_labels = np.squeeze(mask.cpu().numpy())
+masks, flows, _ = model.eval([image], diameter=None, channels=channels)
+pred_labels = masks[0]
+flow_rgb = flows[0][0]  # cellpose flow visualization
+
+# render GT through label_cmap so plot_four uses it (intermediate panel defaults to coolwarm)
+gt_rgb = label_cmap(gt_labels)[..., :3].astype(np.uint8)
+
+plot_four(image, gt_rgb, flow_rgb, pred_labels, label="GT", cmap=label_cmap)
+
+# %% [markdown]
+# Now over the full validation set.
+
+# %%
 precision_list, recall_list, accuracy_list = [], [], []
 for idx, (image, mask, _) in enumerate(tqdm(val_loader)):
     gt_labels = np.squeeze(mask.cpu().numpy())
