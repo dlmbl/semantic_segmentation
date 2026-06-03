@@ -265,7 +265,7 @@ assert dice(wrong_prediction, target) == 0.0, dice(wrong_prediction, target)
 # <b>Task 1.2</b>: What happens if your predictions are not discrete elements of {0,1}?
 #     <ol>
 #         <li>What happens to the Dice score if the predictions are in range (0,1)?</li>
-#         <li>What happens to the Dice score if the predictions are in range ($-\infty$,$\infty$)?</li>
+#         <li>What happens to the Dice score if the predictions are in range (-∞, ∞)?</li>
 #     </ol>
 # </div>
 
@@ -1480,7 +1480,7 @@ plot_two(img, sdt[0], label="SDT")
 
 train_data = SDTDataset("tissuenet_data/train", transforms_v2.RandomCrop(128))
 img, sdt = train_data[10]  # get the image and the distance transform
-# We use the <code style="color: black">plot_two</code> function (imported in the first cell) to verify that our
+# We use the plot_two function (imported in the first cell) to verify that our
 # dataset solution is correct. The output should show 2 images: the raw image and
 # the corresponding SDT.
 plot_two(img, sdt[0], label="SDT")
@@ -1624,7 +1624,6 @@ plot_three(image, sdt, pred)
 # <b>Task 2.1</b>: write a function to find the local maxima of the distance transform
 #
 # <u>Hint</u>: Look at the imports. <br>
-# <u>Hint</u>: It is possible to write this function by only adding 2 lines.
 # </div>
 
 # %% tags=["task"]
