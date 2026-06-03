@@ -1,8 +1,8 @@
 black
-gdown
+setuptools<81
 torch
 torchvision
-jupyter 
+jupyter
 imageio
 scipy
 scikit-image
@@ -11,6 +11,6 @@ matplotlib
 ipykernel
 jupytext
 numpy<2
-cellpose
+cellpose>=3.1,<4
 dlmbl_unet @ git+https://github.com/dlmbl/dlmbl-unet
 mwatershed

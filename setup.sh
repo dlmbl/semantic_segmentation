@@ -11,8 +11,7 @@ python -m ipykernel install --user --name "03-segmentation"
 
 # Download and extract data, etc.
 echo -e "\n downloading data...\n"
-gdown -O kaggle_data.zip 1ahuduC_4Ex84R7qKNRzAY6PiLRWX_J3I
-unzip -u -qq kaggle_data.zip && rm kaggle_data.zip
+aws s3 cp s3://dl-at-mbl-data/2024/02_unet . --recursive --no-sign-request
 
 aws s3 cp "s3://dl-at-mbl-2023-data/woodshole_new.zip" "." --no-sign-request
 unzip woodshole_new.zip
