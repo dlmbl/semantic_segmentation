@@ -25,7 +25,7 @@
 # - **Instance Segmentation**, where we adapt our 2D U-Net for instance segmentations of cells in the TissueNet dataset.
 # </div>
 #
-# Written by William Patton, Vijay Venu, Valentyna Zinchenko, and Constantin Pape.
+# Written by William Patton, Vijay Venu, Valentyna Zinchenko, Arlo Sheridan, Larissa Heinrich, Carsen Stringer, and Constantin Pape.
 
 # %% [markdown]
 # <div class="alert alert-block alert-danger">
